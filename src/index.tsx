@@ -10,7 +10,18 @@ import { theme } from "~/theme";
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { refetchOnWindowFocus: false, retry: false, staleTime: Infinity },
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: Infinity,
+      onError: (err: any) => {
+        if (err.code == 401) {
+          alert("Unauthorized: Missing Authorization Header")
+        } else if (err.code == 403) { 
+          alert("Forbidden: Invalid Credential")
+        }
+      }
+    },
   },
 });
 
