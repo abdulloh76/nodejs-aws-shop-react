@@ -15,6 +15,7 @@ const queryClient = new QueryClient({
       retry: false,
       staleTime: Infinity,
       onError: (err: any) => {
+        console.log("🚀 ~ err:", err);
         if (err.code == 401) {
           alert("Unauthorized: Missing Authorization Header")
         } else if (err.code == 403) { 
