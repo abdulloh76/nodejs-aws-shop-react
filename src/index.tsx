@@ -7,6 +7,20 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { theme } from "~/theme";
+import axios, { AxiosError } from "axios";
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError) => {
+    switch (error.response?.status) {
+      case 401:
+      case 403:
+        alert(`GET presigned url failed with ${error.response?.status} status`);
+        break;
+    }
+    return Promise.reject(error);
+  }
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,14 +28,6 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       retry: false,
       staleTime: Infinity,
-      onError: (err: any) => {
-        console.log("🚀 ~ err:", err);
-        if (err.code == 401) {
-          alert("Unauthorized: Missing Authorization Header")
-        } else if (err.code == 403) { 
-          alert("Forbidden: Invalid Credential")
-        }
-      }
     },
   },
 });
