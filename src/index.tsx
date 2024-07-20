@@ -7,10 +7,28 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { theme } from "~/theme";
+import axios, { AxiosError } from "axios";
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError) => {
+    switch (error.response?.status) {
+      case 401:
+      case 403:
+        alert(`GET presigned url failed with ${error.response?.status} status`);
+        break;
+    }
+    return Promise.reject(error);
+  }
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { refetchOnWindowFocus: false, retry: false, staleTime: Infinity },
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: Infinity,
+    },
   },
 });
 
