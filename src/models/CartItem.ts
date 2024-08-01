@@ -5,9 +5,10 @@ export type CartItem = {
   count: number;
 };
 
-export type Cart = {
+export type CartResponse = {
   cart: {
     items: CartItem[];
-    total: number;
+    status: string;
   };
+  total: number;
 };
